@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  点滴团队 · 资金公开公示网站 —— 页面主文件（index.html）
+  ----------------------------------------------------------------------------
+  【文件作用】定义网页的整体骨架（有哪些板块、顺序如何）。
+  【日常维护】一般不需要改本文件：
+             · 改账目/联系方式/文案  → 编辑 js/data.js
+             · 改颜色/样式/排版      → 编辑 css/style.css
+             · 改动态效果/图表逻辑   → 编辑 js/main.js
+  【板块顺序】顶部导航 → 总览（数字+图表）→ 资金流水时间线 → 明细台账
+             → 资金用途与规则 → 监督与联系 → 页脚
+  本页面为纯静态页面，无任何外部依赖（不联网加载任何资源），双击即可打开。
+  ============================================================================
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <!-- 移动端适配：宽度跟随设备宽度，初始缩放 1.0（手机浏览不缩小） -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 浏览器标签页标题与描述（分享链接时显示） -->
+  <title>点滴团队 · 资金公开公示</title>
+  <meta name="description" content="点滴团队公有资金公开公示：累计注入、支出明细、当前余额实时可查，公开透明，接受监督。" />
+  <meta name="theme-color" content="#2563eb" />
+  <!-- 样式表（所有外观都在这个文件里） -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ====== 全局动态背景层（浅色科技粒子网络，由 main.js 绘制） ====== -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <!-- 蓝色光晕装饰（纯 CSS，营造科技氛围） -->
+  <div class="glow glow-1" aria-hidden="true"></div>
+  <div class="glow glow-2" aria-hidden="true"></div>
+
+  <!-- ====== 顶部导航栏（吸顶、毛玻璃；手机端折叠为按钮菜单） ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <!-- 品牌区：点击回到顶部 -->
+      <a class="brand" href="#top">
+        <!-- 水滴形 Logo（内联 SVG，无需外部图片） -->
+        <svg class="brand-logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2.5c3.8 4.4 6.5 8 6.5 11.2a6.5 6.5 0 1 1-13 0C5.5 10.5 8.2 6.9 12 2.5z"
+                fill="url(#logoGrad)" />
+          <defs>
+            <linearGradient id="logoGrad" x1="6" y1="3" x2="18" y2="21">
+              <stop stop-color="#2563eb" /><stop offset="1" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-text">点滴团队<em class="brand-sub">资金公示</em></span>
+      </a>
+      <!-- 手机端菜单按钮（桌面端隐藏） -->
+      <button class="nav-toggle" id="nav-toggle" aria-label="打开导航菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <!-- 导航链接（锚点平滑滚动到对应板块） -->
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#overview">资金总览</a></li>
+        <li><a href="#timeline">流水时间线</a></li>
+        <li><a href="#records">明细台账</a></li>
+        <li><a href="#purpose">用途规则</a></li>
+        <li><a href="#contact">监督联系</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- ====================================================================
+         板块 1：HERO 资金总览（三项核心数字 + 余额走势折线 + 支出占比环）
+         ==================================================================== -->
+    <header class="hero" id="overview">
+      <div class="container">
+        <!-- 顶部小徽章 -->
+        <div class="hero-badge reveal">
+          <span class="pulse-dot"></span>公开 · 透明 · 可追溯
+        </div>
+        <!-- 主标题（渐变色高亮关键词） -->
+        <h1 class="hero-title reveal">
+          点滴团队<span class="text-gradient">资金公开公示</span>
+        </h1>
+        <p class="hero-sub reveal">
+          团队公有资金的每一笔注入与支出都在此公开。账目数据实时更新，接受全体成员与社会公众监督。
+        </p>
+
+        <!-- 三项核心指标卡片（数字由 js/main.js 自动计算并滚动） -->
+        <div class="stat-grid">
+          <!-- 累计注入（收入合计） -->
+          <div class="stat-card reveal">
+            <div class="stat-icon stat-icon--income" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="stat-label">累计注入</div>
+            <div class="stat-value text-income" id="stat-income">¥0.00</div>
+            <div class="stat-note" id="stat-income-count">共 0 笔收入</div>
+          </div>
+          <!-- 累计支出 -->
+          <div class="stat-card reveal">
+            <div class="stat-icon stat-icon--expense" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="stat-label">累计支出</div>
+            <div class="stat-value text-expense" id="stat-expense">¥0.00</div>
+            <div class="stat-note" id="stat-expense-count">共 0 笔支出</div>
+          </div>
+          <!-- 当前余额（主推卡片：蓝色渐变高亮） -->
+          <div class="stat-card stat-card--primary reveal">
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18v10H3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="13.5" r="1.3" fill="currentColor"/></svg>
+            </div>
+            <div class="stat-label">当前余额</div>
+            <div class="stat-value" id="stat-balance">¥0.00</div>
+            <div class="stat-note" id="stat-balance-note">自动计算：注入 − 支出</div>
+          </div>
+        </div>
+
+        <!-- 图表区（余额走势折线 + 支出占比环；可在 data.js 中关闭） -->
+        <div class="chart-grid" id="chart-section">
+          <div class="chart-card reveal">
+            <div class="chart-head">
+              <h3>余额走势</h3>
+              <span class="chart-tag">按时间累计 · 单位元</span>
+            </div>
+            <div class="chart-body">
+              <canvas id="chart-line" aria-label="余额随时间变化折线图"></canvas>
+            </div>
+          </div>
+          <div class="chart-card reveal">
+            <div class="chart-head">
+              <h3>支出占比</h3>
+              <span class="chart-tag">支出 / 累计注入</span>
+            </div>
+            <div class="chart-body chart-body--ring">
+              <canvas id="chart-ring" aria-label="支出占注入比例环形图"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         板块 2：资金流水时间线（大体脉络，倒序；由 main.js 渲染）
+         ==================================================================== -->
+    <section class="section" id="timeline">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>资金流水时间线</h2>
+          <p>按时间倒序展示每一笔收支，一眼看清资金来龙去脉</p>
+        </div>
+        <!-- 时间线内容挂载点（JS 渲染） -->
+        <div class="timeline" id="timeline-list"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         板块 3：收支明细台账（完整表格 + 类型筛选；由 main.js 渲染）
+         ==================================================================== -->
+    <section class="section section--alt" id="records">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>收支明细台账</h2>
+          <p>完整账目记录，可按"全部 / 收入 / 支出"筛选</p>
+        </div>
+
+        <!-- 筛选按钮组（分段控件样式） -->
+        <div class="filter-bar reveal" id="filter-bar" role="tablist">
+          <button class="filter-btn active" data-filter="all" role="tab">全部记录</button>
+          <button class="filter-btn" data-filter="income" role="tab">仅看收入</button>
+          <button class="filter-btn" data-filter="expense" role="tab">仅看支出</button>
+        </div>
+
+        <!-- 明细表（桌面端显示为表格；手机端 CSS 自动转为卡片） -->
+        <div class="table-card reveal">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>类型</th>
+                <th>分类</th>
+                <th>摘要</th>
+                <th class="col-amount">金额（元）</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"><!-- JS 渲染行 --></tbody>
+          </table>
+          <!-- 空状态（筛选无结果时显示） -->
+          <div class="empty-state" id="empty-state" hidden>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>当前筛选条件下暂无记录</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         板块 4：资金用途与公示规则（文案来自 data.js，可自行修改）
+         ==================================================================== -->
+    <section class="section" id="purpose">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>资金用途与公示规则</h2>
+          <p>明确资金性质、使用原则与监督方式，让每一分钱都有规矩</p>
+        </div>
+        <div class="purpose-grid">
+          <!-- 资金性质 -->
+          <div class="purpose-card reveal">
+            <div class="purpose-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>资金性质</h3>
+            <p id="purpose-nature">—</p>
+          </div>
+          <!-- 使用原则 -->
+          <div class="purpose-card reveal">
+            <div class="purpose-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>使用原则</h3>
+            <ul class="purpose-list" id="purpose-principles"></ul>
+          </div>
+          <!-- 公示规则 -->
+          <div class="purpose-card reveal">
+            <div class="purpose-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3>公示与监督</h3>
+            <ul class="purpose-list" id="purpose-rules"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         板块 5：监督与联系（邮件 / QQ / GitHub）
+         ==================================================================== -->
+    <section class="section section--alt" id="contact">
+      <div class="container">
+        <div class="contact-card reveal">
+          <h2>监督与联系</h2>
+          <p class="contact-sub">
+            对账目有任何疑问，或发现登记有误？欢迎随时联系。<br />
+            每一份监督意见都会被认真对待并及时答复。
+          </p>
+          <div class="contact-actions">
+            <!-- 邮件按钮：href 由 JS 按 data.js 中的邮箱生成（自动带主题） -->
+            <a class="btn btn-primary" id="mailto-btn" href="#">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              发送监督邮件
+            </a>
+            <!-- QQ：点击复制号码 -->
+            <button class="btn btn-ghost" id="qq-copy" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>QQ：<b id="qq-text">—</b>（点击复制）</span>
+            </button>
+            <!-- GitHub：外链由 JS 按 data.js 生成 -->
+            <a class="btn btn-ghost" id="github-link" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              GitHub 开源仓库
+            </a>
+          </div>
+          <p class="contact-email" id="email-text">—</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== 页脚（最后更新日期由 JS 自动取最新一条记录日期） ====== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="footer-year">2026</span> 点滴团队 · 资金公开公示</p>
+      <p class="footer-sub">数据最后更新：<span id="last-updated">—</span> ｜ 公开透明，接受监督</p>
+    </div>
+  </footer>
+
+  <!-- 轻提示（复制成功等反馈用） -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 脚本加载顺序：先数据后逻辑；普通 script 标签保证 file:// 双击也能运行 -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
