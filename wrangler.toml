@@ -1,7 +1,7 @@
 name = "diandi-fund"
-main = "index.html"
 compatibility_date = "2024-09-01"
 
 # 将当前目录作为静态资源目录，让 js/、css/ 子目录文件能被正确访问
+# 注意：纯静态资产部署不需要 main 字段（否则 wrangler 会把 index.html 当脚本编译）
 [assets]
 directory = "./"
