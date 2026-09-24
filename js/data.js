@@ -251,6 +251,50 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 第二批补购（2026-09-22 ~ 09-24，经手人李斯理）——
+    {
+      date: '2026-09-22',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'CM-K230 核心板 16G/1G 升级版（01Studio官方店，含运费），经手人李斯理',
+      amount: 224.00,
+      voucher: '',
+    },
+    {
+      date: '2026-09-23',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'XH2.54 电子线端子线 4P-60MM 单头 5 条（音爪旗舰店），经手人李斯理',
+      amount: 1.65,
+      voucher: '',
+    },
+    {
+      date: '2026-09-23',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '微型纯铜散热片 12×12mm 紫铜 6MM 高 5片带背胶（简易散热，含运费），经手人李斯理',
+      amount: 18.00,
+      voucher: '',
+    },
+    {
+      date: '2026-09-24',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'ESP32-S3FH4R2 QFN-56 Wi-Fi+蓝牙 SoC（深圳市铭昌兴微科技企业店，店铺仓库搬迁延迟发货），经手人李斯理',
+      amount: 7.79,
+      voucher: '',
+    },
+
+    // —— 退货退款（2026-09-23，经手人李斯理）——
+    {
+      date: '2026-09-23',
+      type: 'income',
+      category: '其他收入',
+      desc: '退货退款：CM-K230 核心板 无/1G 低配版退货（01Studio官方店），经手人李斯理',
+      amount: 139.00,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
