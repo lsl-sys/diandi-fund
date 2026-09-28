@@ -295,6 +295,40 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 第三批采购（2026-09-26 ~ 09-28，经手人李斯理）——
+    {
+      date: '2026-09-26',
+      type: 'expense',
+      category: '设备/工具',
+      desc: '手机维修锡膏 183℃ 中温有铅锡浆 50g + 杵针（凯利顺科技，09.26 已送达），经手人李斯理',
+      amount: 31.65,
+      voucher: '',
+    },
+    {
+      date: '2026-09-26',
+      type: 'expense',
+      category: '设备/工具',
+      desc: 'KE150 环保 BGA 助焊膏 10g 送杵针（凯利顺科技，09.26 已送达），经手人李斯理',
+      amount: 11.50,
+      voucher: '',
+    },
+    {
+      date: '2026-09-26',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'K230 配套 MIPI 显示屏 3.5 寸 800×480 带电容触摸（01Studio官方店，含运费，已发货预计 10.1 送达），经手人李斯理',
+      amount: 134.00,
+      voucher: '',
+    },
+    {
+      date: '2026-09-28',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '0402 贴片电容本 80 种各 50 只（世和实业，今日下单待发货），经手人李斯理',
+      amount: 32.00,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
