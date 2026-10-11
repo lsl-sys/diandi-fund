@@ -485,6 +485,16 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 第五批采购（2026-10-11）——
+    {
+      date: '2026-10-11',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'BD+GPS 二合一天线（北斗+GPS 双模，增益 28dBi，SMA 直公头内针，线长 1.5 米）×1（天猫·特加特数码专营店，买家已付款待发货），经手人刘艺',
+      amount: 11.35,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
