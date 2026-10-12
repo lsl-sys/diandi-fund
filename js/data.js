@@ -520,6 +520,22 @@ const FUND_DATA = {
       amount: 219.00,
       voucher: '',
     },
+    {
+      date: '2026-10-12',
+      type: 'expense',
+      category: '设备/工具',
+      desc: '正点原子 USB 测试仪 C0 ×1，经手人李斯理',
+      amount: 59.20,
+      voucher: '',
+    },
+    {
+      date: '2026-10-12',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '闪迪 U3 高速 TF 卡 256G（国行正品 V30 红金卡）×1，经手人李斯理',
+      amount: 296.99,
+      voucher: '',
+    },
 
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
