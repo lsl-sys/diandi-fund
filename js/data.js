@@ -512,6 +512,14 @@ const FUND_DATA = {
       amount: 600.00,
       voucher: '',
     },
+    {
+      date: '2026-10-12',
+      type: 'expense',
+      category: '其他',
+      desc: 'Trae 积分购买，经手人李斯理',
+      amount: 219.00,
+      voucher: '',
+    },
 
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
