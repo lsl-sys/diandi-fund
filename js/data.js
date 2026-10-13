@@ -537,6 +537,56 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 芯片/模块/连接器合单（2026-10-13，经手人李斯理）——
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'TPS54560DDAR TI 降压 DC-DC SOIC-8 ×6，经手人李斯理',
+      amount: 27.84,
+      voucher: '',
+    },
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'SN74LVC1T45DBVR SOT-23 电平转换芯片 ×10，经手人李斯理',
+      amount: 3.50,
+      voucher: '',
+    },
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'MAX485ESA UMW/友台 SOP-8 通信芯片 ×5，经手人李斯理',
+      amount: 14.60,
+      voucher: '',
+    },
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'ESPC5-32E-H4 双频 WiFi6+蓝牙模块 ×5，经手人李斯理',
+      amount: 86.20,
+      voucher: '',
+    },
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'XT30PW-F 母头连接器 ×5，经手人李斯理',
+      amount: 7.20,
+      voucher: '',
+    },
+    {
+      date: '2026-10-13',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'XT30PW-M 公头连接器 ×5，经手人李斯理',
+      amount: 7.20,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
