@@ -702,6 +702,53 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 油漏检测项目：5 笔订单（2026-10-14，唐斯诺滤光片 3 规格合并为 1 笔整单）——
+    {
+      date: '2026-10-14',
+      project: '油漏检测',
+      type: 'expense',
+      category: '设备/工具',
+      desc: 'UV固化灯 紫外线LED大功率（定时数显+固化灯支架）×1（天猫·鹿仙子旗舰店，已发货），经手人李斯理',
+      amount: 24.14,
+      voucher: '',
+    },
+    {
+      date: '2026-10-14',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '单头六角尼龙隔离柱支撑柱 M2.5*15+6（50个）白色 ×1（天猫·佰瑞特官方旗舰店，已发货），经手人李斯理',
+      amount: 4.29,
+      voucher: '',
+    },
+    {
+      date: '2026-10-14',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '透明圆头十字塑料螺丝 M2.5*6（100颗）×1（天猫·坚威旗舰店，已发货），经手人李斯理',
+      amount: 4.12,
+      voucher: '',
+    },
+    {
+      date: '2026-10-14',
+      project: '油漏检测',
+      type: 'expense',
+      category: '设备/工具',
+      desc: '绿联高速读卡器 相机SD卡读取（USB3.0+Type-C 铝壳，SD/TF4.0 双卡同读）×1（天猫·绿联数码旗舰店，待发货），经手人李斯理',
+      amount: 64.90,
+      voucher: '',
+    },
+    {
+      date: '2026-10-14',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '365nm ZWB2 紫外透射滤光片 ×3（直径 8.9/8/8.5×1.0mm 各1，含运费¥10，石家庄唐斯诺光电，待发货），经手人李斯理',
+      amount: 21.00,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', project: '油漏检测', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
