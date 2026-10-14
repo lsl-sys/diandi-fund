@@ -589,6 +589,16 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 油液微水检测项目（2026-10-14，经手人熊涛）——
+    {
+      date: '2026-10-14',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'MDS-680A 传感器 ×1（油液微水检测项目支出），经手人熊涛',
+      amount: 1900.00,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
