@@ -58,6 +58,7 @@
       <!-- 导航链接（锚点平滑滚动到对应板块） -->
       <ul class="nav-links" id="nav-links">
         <li><a href="#overview">资金总览</a></li>
+        <li><a href="#projects">项目经费</a></li>
         <li><a href="#timeline">流水时间线</a></li>
         <li><a href="#records">明细台账</a></li>
         <li><a href="#purpose">用途规则</a></li>
@@ -141,7 +142,22 @@
     </header>
 
     <!-- ====================================================================
-         板块 2：资金流水时间线（大体脉络，倒序；由 main.js 渲染）
+         板块 2：项目经费使用情况（按项目归集支出；由 main.js 渲染）
+         ==================================================================== -->
+    <section class="section section--alt" id="projects">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>项目经费使用情况</h2>
+          <p>按项目归集支出，便于分项目核算与对账；下方明细台账可按项目筛选</p>
+        </div>
+        <!-- 项目卡片挂载点（JS 渲染；每张卡含项目名、笔数、支出合计与占比） -->
+        <div class="project-grid" id="project-grid"></div>
+        <p class="project-total-note reveal">全部项目支出合计：<b id="project-total">¥0.00</b></p>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         板块 3：资金流水时间线（大体脉络，倒序；由 main.js 渲染）
          ==================================================================== -->
     <section class="section" id="timeline">
       <div class="container">
@@ -155,16 +171,19 @@
     </section>
 
     <!-- ====================================================================
-         板块 3：收支明细台账（完整表格 + 类型筛选；由 main.js 渲染）
+         板块 4：收支明细台账（完整表格 + 项目/类型筛选；由 main.js 渲染）
          ==================================================================== -->
     <section class="section section--alt" id="records">
       <div class="container">
         <div class="section-head reveal">
           <h2>收支明细台账</h2>
-          <p>完整账目记录，可按"全部 / 收入 / 支出"筛选</p>
+          <p>完整账目记录，可先按"项目"再按"全部 / 收入 / 支出"筛选</p>
         </div>
 
-        <!-- 筛选按钮组（分段控件样式） -->
+        <!-- 项目筛选按钮组（由 data.js 的 projects 自动生成） -->
+        <div class="filter-bar filter-bar--sub reveal" id="project-bar" role="tablist"></div>
+
+        <!-- 类型筛选按钮组（分段控件样式） -->
         <div class="filter-bar reveal" id="filter-bar" role="tablist">
           <button class="filter-btn active" data-filter="all" role="tab">全部记录</button>
           <button class="filter-btn" data-filter="income" role="tab">仅看收入</button>
@@ -178,6 +197,7 @@
               <tr>
                 <th>日期</th>
                 <th>类型</th>
+                <th>项目</th>
                 <th>分类</th>
                 <th>摘要</th>
                 <th class="col-amount">金额（元）</th>
@@ -195,7 +215,7 @@
     </section>
 
     <!-- ====================================================================
-         板块 4：资金用途与公示规则（文案来自 data.js，可自行修改）
+         板块 5：资金用途与公示规则（文案来自 data.js，可自行修改）
          ==================================================================== -->
     <section class="section" id="purpose">
       <div class="container">
@@ -233,7 +253,7 @@
     </section>
 
     <!-- ====================================================================
-         板块 5：监督与联系（邮件 / QQ / GitHub）
+         板块 6：监督与联系（邮件 / QQ / GitHub）
          ==================================================================== -->
     <section class="section section--alt" id="contact">
       <div class="container">

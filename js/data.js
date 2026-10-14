@@ -9,20 +9,22 @@
  *   在本文件最下面的 records 列表里，照着模板复制一行，改成新的一笔收支即可。
  *   详细的图文步骤请看：工程管理/账目更新指南.md
  *
- * 【修改时的 5 条铁律】
- *   1. 只能改冒号 ":" 后面的内容，不要删字段名（date / type / category / desc / amount）。
+ * 【修改时的 6 条铁律】
+ *   1. 只能改冒号 ":" 后面的内容，不要删字段名（date / project / type / category / desc / amount）。
  *   2. 文字内容必须用英文单引号或双引号包起来，例如：'买元器件'。
  *   3. 金额是数字，【不要】加引号、不要加 ¥、不要加千分位逗号：
  *        正确： amount: 356.5
  *        错误： amount: '356.5元'   amount: "1,200"
  *   4. 每一条记录之间用英文逗号 "," 隔开；最后一条记录后面可加可不加逗号。
  *   5. 日期格式固定为 'YYYY-MM-DD'（年-月-日，月日不足两位补 0），如 '2026-09-05'。
+ *   6. project 必须是本文件 projects 列表里的项目名之一（油漏检测 / 油液微水检测 / 刘艺经手 / 其他）。
  *
  * 【新增一条记录的模板】（复制下面这行，改好后粘到 records 列表里即可）
- *   { date: '2026-09-10', type: 'expense', category: '元器件/物料', desc: '在这里写这笔钱花在了哪里', amount: 100, voucher: '' },
+ *   { date: '2026-09-10', project: '油漏检测', type: 'expense', category: '元器件/物料', desc: '在这里写这笔钱花在了哪里', amount: 100, voucher: '' },
  *
  * 【字段说明】
  *   date     日期，字符串，格式 'YYYY-MM-DD'
+ *   project  项目，字符串，取值见本文件 projects 列表；收入类账目固定写 '公共经费'
  *   type     类型，只有两种：'income' = 收入（钱进团队账户）
  *                            'expense' = 支出（钱从团队账户花出去）
  *   category 分类，建议从本文件 site.categories 列表里选；也可以自己写新分类
@@ -84,7 +86,19 @@ const FUND_DATA = {
   },
 
   /* ==========================================================================
-   * 第二部分：账目记录（records）
+   * 第二部分：项目配置（projects）
+   * 网页按这里的项目对支出分类统计与筛选；每笔账目用 project 字段归属到项目。
+   * 顺序无所谓（页面会自动按支出金额从大到小排列），可自行增删项目。
+   * ======================================================================== */
+  projects: [
+    { key: '油漏检测',     desc: '油漏检测主项目' },
+    { key: '油液微水检测', desc: '油液微水检测项目（MDS-680A 传感器等）' },
+    { key: '刘艺经手',     desc: '刘艺经手的采购支出' },
+    { key: '其他',         desc: '其他支出（含未注明明细的项目款）' },
+  ],
+
+  /* ==========================================================================
+   * 第三部分：账目记录（records）
    * 这是一个列表，列表里每一对 { ... } 就是一笔账。
    * 顺序无所谓，网页会自动按日期从新到旧排列。
    * ======================================================================== */
@@ -93,6 +107,7 @@ const FUND_DATA = {
     // —— 经费交接：接手时账户实际结余 ——
     {
       date: '2026-09-05',
+      project: '公共经费',
       type: 'income',
       category: '初始注入',
       desc: '团队经费交接：接手时账户实际结余 10109.18 元，接手后暂无支出',
@@ -103,6 +118,7 @@ const FUND_DATA = {
     // —— 项目耗材：USB 网卡 + 路由器天线 ——
     {
       date: '2026-09-17',
+      project: '刘艺经手',
       type: 'expense',
       category: '元器件/物料',
       desc: '项目耗材：绿联 USB3.0 有线网卡 × 2 件（绿联数码旗舰店）+ 流星聚合 5G 全频段路由器天线 × 1 件（流星聚合官方旗舰店），经手人刘艺',
@@ -113,6 +129,7 @@ const FUND_DATA = {
     // —— 项目物料购买 ——
     {
       date: '2026-09-18',
+      project: '其他',
       type: 'expense',
       category: '元器件/物料',
       desc: '项目物料购买，经手人李斯理',
@@ -124,6 +141,7 @@ const FUND_DATA = {
     // 注：流浪猫猫碗 ¥8.00 与 Trae CN 会员 ¥89.00 非团队支出，未登记
     {
       date: '2026-09-16',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'ESP32-S3FH4R2 QFN-56（深圳市新纶电子），经手人李斯理',
@@ -132,6 +150,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-18',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'CM-K230 核心板 16G/1G（01Studio官方店），经手人李斯理',
@@ -140,6 +159,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-18',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '防静电手套 M 码（淮柔广州专卖店），经手人李斯理',
@@ -148,6 +168,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-18',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '散热片 40×11 带风扇带背胶 ×2（文豪永顺旗舰店），经手人李斯理',
@@ -156,6 +177,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-18',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '淘晶驰 T1 系列 4.3 寸串口电容屏 ×2，经手人李斯理',
@@ -164,6 +186,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-18',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'AP6256 无线模块 ×2（华迈芯电子），经手人李斯理',
@@ -172,6 +195,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'GC2093 自动对焦摄像头（K230 用）×2（01Studio官方店），经手人李斯理',
@@ -180,6 +204,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '元件合单：QMC5883P + TPS54561 + BMI270 + ME6217×10 + SHT30（深圳市优信电子），经手人李斯理',
@@ -188,6 +213,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'CSNP1GCR01-BOW 存储器 LGA-8（深圳市安芯选电子），经手人李斯理',
@@ -196,6 +222,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'PC 透明亚克力螺丝 M3×5（50套）（佰瑞特官方旗舰店），经手人李斯理',
@@ -204,6 +231,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'PDS760-13（DIODES）（深圳市捷洲电子），经手人李斯理',
@@ -212,6 +240,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '0805 电容 47µF/10V ×20（深圳市鑫隆发电子），经手人李斯理',
@@ -220,6 +249,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '1206 电容 2.2µF/50V ×10（科迪电子），经手人李斯理',
@@ -228,6 +258,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '双通六角尼龙柱 M3×14（50只）（力烁旗舰店），经手人李斯理',
@@ -236,6 +267,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '大尺寸锡膏台/钢网印刷台 PCB 90×84（暂未发货），经手人李斯理',
@@ -244,6 +276,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-19',
+      project: '油漏检测',
       type: 'expense',
       category: '其他',
       desc: '软件服务：Altium Designer 26 远程安装（proteus KEIL AD远程安装店），经手人李斯理',
@@ -254,6 +287,7 @@ const FUND_DATA = {
     // —— 第二批补购（2026-09-22 ~ 09-24，经手人李斯理）——
     {
       date: '2026-09-22',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'CM-K230 核心板 16G/1G 升级版（01Studio官方店，含运费），经手人李斯理',
@@ -262,6 +296,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-23',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'XH2.54 电子线端子线 4P-60MM 单头 5 条（音爪旗舰店），经手人李斯理',
@@ -270,6 +305,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-23',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '微型纯铜散热片 12×12mm 紫铜 6MM 高 5片带背胶（简易散热，含运费），经手人李斯理',
@@ -278,6 +314,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-24',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'ESP32-S3FH4R2 QFN-56 Wi-Fi+蓝牙 SoC（深圳市铭昌兴微科技企业店，店铺仓库搬迁延迟发货），经手人李斯理',
@@ -288,6 +325,7 @@ const FUND_DATA = {
     // —— 退货退款（2026-09-23，经手人李斯理）——
     {
       date: '2026-09-23',
+      project: '公共经费',
       type: 'income',
       category: '其他收入',
       desc: '退货退款：CM-K230 核心板 无/1G 低配版退货（01Studio官方店），经手人李斯理',
@@ -298,6 +336,7 @@ const FUND_DATA = {
     // —— 第三批采购（2026-09-28，经手人李斯理）——
     {
       date: '2026-09-28',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '手机维修锡膏 183℃ 中温有铅锡浆 50g + 杵针（凯利顺科技），经手人李斯理',
@@ -306,6 +345,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-28',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: 'KE150 环保 BGA 助焊膏 10g 送杵针（凯利顺科技），经手人李斯理',
@@ -314,6 +354,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-28',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'K230 配套 MIPI 显示屏 3.5 寸 800×480 带电容触摸（01Studio官方店，含运费，已发货预计 10.1 送达），经手人李斯理',
@@ -322,6 +363,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-28',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '0402 贴片电容本 80 种各 50 只（世和实业，待发货），经手人李斯理',
@@ -332,6 +374,7 @@ const FUND_DATA = {
     // —— 设备采购：热风枪（2026-09-25 下单，经手人李斯理）——
     {
       date: '2026-09-25',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '正点原子智能热风枪 H550 标配 6mm 直风嘴版（正点原子旗舰店，原价 278 实付 186.68，已签收），经手人李斯理',
@@ -342,6 +385,7 @@ const FUND_DATA = {
     // —— 第四批采购（2026-09-29 ~ 10-04，经手人李斯理）——
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'W25Q256JVEIQ WSON-8 闪存 ×3（意法世纪半导体），经手人李斯理',
@@ -350,6 +394,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: 'SMT 激光钢网 ≤10×10cm 无框（宏扬 SMT 激光钢网），经手人李斯理',
@@ -358,6 +403,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '0402 电容 10µF×50 + 100nF×100（YSUNK 旗舰店），经手人李斯理',
@@ -366,6 +412,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '0402 高频电感 2NH + 1.3NH 各 100 个（CAICOS 旗舰店），经手人李斯理',
@@ -374,6 +421,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: 'VETUS ST-11 超硬镊子 HRC40（旭日电子商城），经手人李斯理',
@@ -382,6 +430,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '0402 电容 22µF 6.3V X5R ×20（迪林旗舰店），经手人李斯理',
@@ -390,6 +439,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'BTS7004-1EPP 高边开关 ×5（深圳篮信微科技），经手人李斯理',
@@ -398,6 +448,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-29',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'XC6220B331MR-G LDO ×5（深圳恒芯科创），经手人李斯理',
@@ -406,6 +457,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-30',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '吸锡带 2.5mm×1.5m 5 卷装（维修佬创立泰），经手人李斯理',
@@ -414,6 +466,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-30',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '5G/5.8G IPEX 天线 ×4（risym 旗舰店），经手人李斯理',
@@ -422,6 +475,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-30',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'USB3.2 OTG 线 C 公 A 母 10Gbps（鹿易凡旗舰店），经手人李斯理',
@@ -430,6 +484,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-09-30',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'STM32H750IBK6 UFBGA-201 ×5（意法世纪半导体），经手人李斯理',
@@ -438,6 +493,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-02',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '贴片元件翻盖收纳盒 1# 蓝色 100 格拼装（日盛电子五金），经手人李斯理',
@@ -446,6 +502,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-02',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'CH334P QFN-16 USB2.0 Hub ×10 + CH343P USB 转串口 ×10（深圳市优信电子，已发货），经手人李斯理',
@@ -454,6 +511,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-02',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'YSO120TK 贴片有源晶振 YXC 3225 ×4（晶心微科技），经手人李斯理',
@@ -462,6 +520,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-02',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'GH1.25-6P 转杜邦母端子线 0.2m ×5 条（信容芯旗舰店），经手人李斯理',
@@ -470,6 +529,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-02',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'PH2.0-3P/30CM 电子线 ×5 + 1.25mm 立贴 3P 编带 ×10（优信电子），经手人李斯理',
@@ -478,6 +538,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-04',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '1000 万像素数码放大电子显微镜 5.5 寸屏/铝塑支架/充电款（锐界 AcuEdge），经手人李斯理',
@@ -488,6 +549,7 @@ const FUND_DATA = {
     // —— 第五批采购（2026-10-11）——
     {
       date: '2026-10-11',
+      project: '刘艺经手',
       type: 'expense',
       category: '元器件/物料',
       desc: 'BD+GPS 二合一天线（北斗+GPS 双模，增益 28dBi，SMA 直公头内针，线长 1.5 米）×1（天猫·特加特数码专营店，买家已付款待发货），经手人刘艺',
@@ -498,6 +560,7 @@ const FUND_DATA = {
     // —— 日常支出（2026-10-12）——
     {
       date: '2026-10-12',
+      project: '油漏检测',
       type: 'expense',
       category: '其他',
       desc: '团队工作餐（采蝶轩），经手人李斯理、熊涛',
@@ -506,6 +569,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-12',
+      project: '其他',
       type: 'expense',
       category: '其他',
       desc: '项目支出，经手人李斯理',
@@ -514,6 +578,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-12',
+      project: '油漏检测',
       type: 'expense',
       category: '其他',
       desc: 'Trae 积分购买，经手人李斯理',
@@ -522,6 +587,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-12',
+      project: '油漏检测',
       type: 'expense',
       category: '设备/工具',
       desc: '正点原子 USB 测试仪 C0 ×1，经手人李斯理',
@@ -530,6 +596,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-12',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '闪迪 U3 高速 TF 卡 256G（国行正品 V30 红金卡）×1，经手人李斯理',
@@ -540,6 +607,7 @@ const FUND_DATA = {
     // —— 芯片/模块/连接器合单（2026-10-13，经手人李斯理，按3笔整单登记）——
     {
       date: '2026-10-13',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '优信电子：TPS54560×6、SN74LVC1T45×10、ESPC5-32E-H4×5（整单），经手人李斯理',
@@ -548,6 +616,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-13',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'zave旗舰店：MAX485ESA×5（整单），经手人李斯理',
@@ -556,6 +625,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-13',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '亿杰芯电子：XT30PW-F×5、XT30PW-M×5（整单，含运费¥1），经手人李斯理',
@@ -566,6 +636,7 @@ const FUND_DATA = {
     // —— 线材/元件/模块（2026-10-13，经手人李斯理）——
     {
       date: '2026-10-13',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '双Type-C编织数据线（100W 横弯 0.25m）×1，经手人李斯理',
@@ -574,6 +645,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-13',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '贴片钽电容 TAJA104K035RNJ（3216A 100nF 35V）×1，经手人李斯理',
@@ -582,6 +654,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-10-13',
+      project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'AP6256 WiFi+蓝牙二合一模块（QFN44，11AC双频）×2，经手人李斯理',
@@ -592,15 +665,25 @@ const FUND_DATA = {
     // —— 油液微水检测项目（2026-10-14，经手人熊涛）——
     {
       date: '2026-10-14',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: 'MDS-680A 传感器 ×1（油液微水检测项目支出），经手人熊涛',
       amount: 1900.00,
       voucher: '',
     },
+    {
+      date: '2026-10-14',
+      project: '油液微水检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'INA219AIDR SOIC-8 电流检测芯片 ×5（深圳市优信电子，待发货），经手人李斯理',
+      amount: 20.80,
+      voucher: '',
+    },
 
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
-    // { date: '2026-10-01', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
+    // { date: '2026-10-01', project: '油漏检测', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
   ],
 };

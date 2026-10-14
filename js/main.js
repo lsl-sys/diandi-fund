@@ -75,6 +75,7 @@
       valid.push({
         date: r.date,
         type: r.type,
+        project: String(r.project || '未分配'),
         category: String(r.category || '未分类'),
         desc: String(r.desc || ''),
         amount: amount,
@@ -93,6 +94,27 @@
   }
 
   /* ========================== 区块 2：资金计算核心（升级接口①） ========================== */
+
+  /** 项目清单：来自 data.js 的 projects 数组（兼容字符串写法），过滤空项 */
+  function projectList() {
+    const raw = Array.isArray(FUND_DATA.projects) ? FUND_DATA.projects : [];
+    return raw
+      .map(p => typeof p === 'string' ? { key: p, desc: '' } : { key: String((p && p.key) || ''), desc: String((p && p.desc) || '') })
+      .filter(p => p.key);
+  }
+
+  /**
+   * 按项目汇总支出：返回 [{ key, desc, expense, count, percent }]，
+   * percent 为该项目的支出占全部支出的比例，结果按支出金额从大到小排序。
+   */
+  function projectSummary(records) {
+    const total = records.reduce((s, r) => r.type === 'expense' ? s + r.amount : s, 0);
+    return projectList().map(p => {
+      const rows = records.filter(r => r.type === 'expense' && r.project === p.key);
+      const expense = rows.reduce((s, r) => s + r.amount, 0);
+      return { key: p.key, desc: p.desc, expense, count: rows.length, percent: total > 0 ? expense / total : 0 };
+    }).sort((a, b) => b.expense - a.expense);
+  }
 
   /** 汇总：累计注入、累计支出、当前余额、笔数 */
   function calcSummary(records) {
@@ -197,6 +219,31 @@
     $('#stat-expense-count').textContent = '共 ' + summary.expenseCount + ' 笔支出';
   }
 
+  /* ========================== 区块 4.5：项目经费卡片（分项目统计） ========================== */
+
+  function renderProjects(records) {
+    const grid = $('#project-grid');
+    if (!grid) return;
+    const items = projectSummary(records);
+    const total = items.reduce((s, p) => s + p.expense, 0);
+    const totalEl = $('#project-total');
+    if (totalEl) totalEl.textContent = '¥' + formatMoney(total);
+
+    grid.innerHTML = items.map((p, i) => (
+      '<div class="project-card reveal" style="transition-delay:' + Math.min(i, 6) * 70 + 'ms">' +
+        '<div class="project-card-top">' +
+          '<span class="project-name">' + escapeHtml(p.key) + '</span>' +
+          '<span class="project-count">' + p.count + ' 笔</span>' +
+        '</div>' +
+        (p.desc ? '<p class="project-desc">' + escapeHtml(p.desc) + '</p>' : '') +
+        '<div class="project-amount">¥' + formatMoney(p.expense) + '</div>' +
+        '<div class="project-bar"><i style="width:' + (p.percent * 100).toFixed(1) + '%"></i></div>' +
+        '<div class="project-percent">占全部支出 ' + (p.percent * 100).toFixed(1) + '%</div>' +
+      '</div>'
+    )).join('');
+    observeReveals(grid);
+  }
+
   /* ========================== 区块 5：资金流水时间线渲染 ========================== */
 
   function renderTimeline(recordsDesc) {
@@ -215,6 +262,7 @@
               '<div class="tl-meta">' +
                 '<span class="tl-date">' + r.date + '</span>' +
                 '<span class="tl-chip ' + (isIncome ? 'tl-chip--income' : 'tl-chip--expense') + '">' + (isIncome ? '收入' : '支出') + '</span>' +
+                '<span class="tl-proj">' + escapeHtml(r.project) + '</span>' +
                 '<span class="tl-cat">' + escapeHtml(r.category) + '</span>' +
               '</div>' +
               '<div class="tl-desc">' + escapeHtml(r.desc) + '</div>' +
@@ -232,12 +280,14 @@
   /* ========================== 区块 6：明细表格渲染与筛选 ========================== */
 
   let allRecordsDesc = [];   // 全部记录（倒序）
-  let currentFilter = 'all'; // 当前筛选：all / income / expense
+  let currentFilter = 'all'; // 当前类型筛选：all / income / expense
+  let currentProject = 'all'; // 当前项目筛选：all / 具体项目名
 
   function renderTable() {
     const tbody = $('#table-body');
     const list = allRecordsDesc.filter(r =>
-      currentFilter === 'all' ? true : r.type === currentFilter
+      (currentFilter === 'all' || r.type === currentFilter) &&
+      (currentProject === 'all' || r.project === currentProject)
     );
 
     $('#empty-state').hidden = list.length > 0;
@@ -249,6 +299,7 @@
           '<td data-label="日期" class="cell-date">' + r.date + '</td>' +
           '<td data-label="类型"><span class="type-badge ' + (isIncome ? 'type-badge--income' : 'type-badge--expense') + '">' +
             (isIncome ? '收入' : '支出') + '</span></td>' +
+          '<td data-label="项目"><span class="proj-badge">' + escapeHtml(r.project) + '</span></td>' +
           '<td data-label="分类" class="cell-cat">' + escapeHtml(r.category) + '</td>' +
           '<td data-label="摘要">' + escapeHtml(r.desc) + '</td>' +
           '<td data-label="金额" class="amount-cell ' + (isIncome ? 'amount-cell--income' : 'amount-cell--expense') + '">' +
@@ -264,6 +315,29 @@
         $$('#filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentFilter = btn.dataset.filter;
+        renderTable();
+      });
+    });
+  }
+
+  /** 渲染项目筛选按钮（“全部项目” + data.js 里配置的项目） */
+  function renderProjectBar() {
+    const bar = $('#project-bar');
+    if (!bar) return;
+    const items = [{ key: 'all', label: '全部项目' }]
+      .concat(projectList().map(p => ({ key: p.key, label: p.key })));
+    bar.innerHTML = items.map(p =>
+      '<button class="filter-btn' + (p.key === currentProject ? ' active' : '') + '" data-project="' +
+      escapeHtml(p.key) + '" role="tab">' + escapeHtml(p.label) + '</button>'
+    ).join('');
+  }
+
+  function bindProjectFilters() {
+    $$('#project-bar .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('#project-bar .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentProject = btn.dataset.project;
         renderTable();
       });
     });
@@ -731,17 +805,21 @@
     // 2) 渲染各板块
     renderSiteText(records);
     renderStats(summary);
+    renderProjects(records);
     renderTimeline(allRecordsDesc);
     renderTable();
+    renderProjectBar();
     bindFilters();
+    bindProjectFilters();
     initCharts(summary, series);
 
     // 3) 对外暴露 API（控制台可输入 FundApp.summary() 查看，未来升级直接调用）
     window.FundApp = {
-      version: '1.0.0',
+      version: '1.1.0',
       data: FUND_DATA,
       getRecords: (desc) => sortRecords(records, desc === false),
       summary: () => calcSummary(records),
+      projectSummary: () => projectSummary(records),
       balanceSeries: () => buildBalanceSeries(records),
       monthlyAggregate: () => monthlyAggregate(records),
       renderAll: renderAll,

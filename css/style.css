@@ -478,6 +478,79 @@ body::before {
 .empty-state { text-align: center; padding: 60px 20px; color: var(--ink-2); }
 .empty-state svg { width: 42px; height: 42px; margin-bottom: 12px; opacity: 0.5; }
 
+/* ============================ 板块2.5：项目经费（卡片 / 徽章 / 项目筛选） ============================ */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.project-card {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px 18px;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(23, 62, 153, 0.14); }
+.project-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.project-name { font-size: 15px; font-weight: 800; }
+.project-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-2);
+  background: rgba(37, 99, 235, 0.08);
+  padding: 2px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.project-desc { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+.project-amount {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--expense);
+  margin: 10px 0 8px;
+  font-variant-numeric: tabular-nums;
+}
+.project-bar { height: 8px; border-radius: 999px; background: rgba(37, 99, 235, 0.10); overflow: hidden; }
+.project-bar i { display: block; height: 100%; border-radius: 999px; background: var(--grad); transition: width 0.8s ease; }
+.project-percent { font-size: 12px; color: var(--ink-2); margin-top: 8px; font-weight: 600; }
+.project-total-note { text-align: center; color: var(--ink-2); font-size: 14px; margin-top: 20px; }
+.project-total-note b { color: var(--expense); font-size: 16px; }
+
+/* 项目徽章（明细表格使用）与时间线项目标签 */
+.proj-badge {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 3px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--blue);
+  background: rgba(37, 99, 235, 0.09);
+}
+.tl-proj {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: rgba(15, 31, 66, 0.06);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* 项目筛选条（比类型筛选条更紧凑，与类型筛选条上下排列） */
+.filter-bar--sub { margin-bottom: 12px; }
+.filter-bar--sub .filter-btn { padding: 7px 16px; font-size: 13px; }
+
+@media (max-width: 860px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+
 /* ============================ 板块4：资金用途与规则 ============================ */
 .purpose-grid {
   display: grid;
