@@ -749,6 +749,35 @@ const FUND_DATA = {
       voucher: '',
     },
 
+    // —— 油液微水检测项目：INA219AIDCNR + SMT钢网 + 防水胶（2026-10-16/10-14 下单，三笔分开登记）——
+    {
+      date: '2026-10-16',
+      project: '油液微水检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: 'INA219AIDCNR SOT-23-8 电流检测芯片 ×6（深圳市优信电子科技有限公司，10.16实付），经手人李斯理',
+      amount: 23.13,
+      voucher: '',
+    },
+    {
+      date: '2026-10-16',
+      project: '油液微水检测',
+      type: 'expense',
+      category: '设备/工具',
+      desc: 'SMT激光钢网 小钢片PCB模板 10×10cm无框 ×2（宏扬SMT激光钢网，10.16实付），经手人李斯理',
+      amount: 30.00,
+      voucher: '',
+    },
+    {
+      date: '2026-10-14',
+      project: '油液微水检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '电路板防水胶 703M 半透明密封 100ml ×1（胶水工厂企业店，10.14实付），经手人李斯理',
+      amount: 14.00,
+      voucher: '',
+    },
+
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', project: '油漏检测', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
 
