@@ -878,6 +878,24 @@ const FUND_DATA = {
       amount: 0.31,
       voucher: '',
     },
+    {
+      date: '2026-10-20',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '维修佬 金手指耐高温胶带 20mm×35m 一卷（维修佬旗舰店，10.20下单，交易成功），经手人李斯理',
+      amount: 10.60,
+      voucher: '',
+    },
+    {
+      date: '2026-10-20',
+      project: '油漏检测',
+      type: 'expense',
+      category: '设备/工具',
+      desc: '正点原子 HP20 智能加热台数显（加热台主机+C2C 线，活动价优惠 ¥113）×1（正点原子旗舰店，10.20下单，交易成功，可开票），经手人李斯理',
+      amount: 285.00,
+      voucher: '',
+    },
 
     // —— 新增记录请复制下面这一行（不要复制本行注释和下面那行注释），改好后粘到上面列表里 ——
     // { date: '2026-10-01', project: '油漏检测', type: 'expense', category: '元器件/物料', desc: '摘要写这里', amount: 100, voucher: '' },
