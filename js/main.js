@@ -265,12 +265,14 @@
       let head = '';
       if (month !== lastMonth) {
         lastMonth = month;
-        head = '<div class="tl-month">' + monthLabel(month) + '</div>';
+        head = '<div class="tl-month tl-month-toggle collapsed" role="button" tabindex="0" aria-expanded="false">' +
+          '<span class="tl-month-caret">▾</span>' + monthLabel(month) +
+          '</div>';
       }
       const isIncome = r.type === 'income';
       idx += 1;
       return head +
-        '<div class="tl-item reveal" style="transition-delay:' + Math.min(idx, 6) * 70 + 'ms">' +
+        '<div class="tl-item is-tl-hidden">' +
           '<div class="tl-dot ' + (isIncome ? 'tl-dot--income' : 'tl-dot--expense') + '">' + (isIncome ? '+' : '−') + '</div>' +
           '<div class="tl-card">' +
             '<div>' +
@@ -289,6 +291,32 @@
         '</div>';
     }).join('');
     observeReveals(wrap);
+    bindTimelineMonths(wrap);
+  }
+
+  /** 时间线月份标签：点击折叠/展开该月所有条目（默认折叠） */
+  function bindTimelineMonths(wrap) {
+    wrap.addEventListener('click', e => {
+      const label = e.target.closest('.tl-month-toggle');
+      if (!label) return;
+      const collapsed = label.classList.toggle('collapsed');
+      label.setAttribute('aria-expanded', String(!collapsed));
+      let el = label.nextElementSibling;
+      while (el && !el.classList.contains('tl-month-toggle')) {
+        if (el.classList.contains('tl-item')) {
+          el.classList.toggle('is-tl-hidden', collapsed);
+        }
+        el = el.nextElementSibling;
+      }
+    });
+    // 键盘可访问：回车/空格也能展开
+    wrap.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const label = e.target.closest('.tl-month-toggle');
+      if (!label) return;
+      e.preventDefault();
+      label.click();
+    });
   }
 
   /* ========================== 区块 6：明细表格渲染与筛选 ========================== */
@@ -326,9 +354,9 @@
         (expense ? ' · 支出 ¥' + formatMoney(expense) : '');
 
       const headRow =
-        '<tr class="month-row">' +
+        '<tr class="month-row collapsed">' +
           '<td colspan="6">' +
-            '<button type="button" class="month-toggle" aria-expanded="true">' +
+            '<button type="button" class="month-toggle" aria-expanded="false">' +
               '<span class="month-caret">▾</span>' +
               '<span class="month-title">' + monthLabel(g.month) + '</span>' +
               '<span class="month-meta">' + meta + '</span>' +
@@ -339,7 +367,7 @@
       const bodyRows = g.rows.map(r => {
         const isIncome = r.type === 'income';
         return (
-          '<tr>' +
+          '<tr class="is-month-hidden">' +
             '<td data-label="日期" class="cell-date">' + r.date + '</td>' +
             '<td data-label="类型"><span class="type-badge ' + (isIncome ? 'type-badge--income' : 'type-badge--expense') + '">' +
               (isIncome ? '收入' : '支出') + '</span></td>' +
@@ -354,6 +382,10 @@
 
       return headRow + bodyRows;
     }).join('');
+    // 表格容器有 reveal 动画，确保渲染后立即显示
+    const card = tbody.closest('.table-card');
+    if (card) card.classList.add('revealed');
+    observeReveals(card || tbody);
   }
 
   /** 点击月份标题：折叠/展开该月所有记录 */

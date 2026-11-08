@@ -356,7 +356,9 @@ body::before {
 /* 时间线月份分隔标签 */
 .tl-month {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 6px 0 18px;
   padding: 7px 16px;
   border-radius: 999px;
@@ -367,6 +369,16 @@ body::before {
   font-weight: 700;
   letter-spacing: 0.4px;
 }
+.tl-month-toggle { cursor: pointer; user-select: none; }
+.tl-month-toggle:hover { background: rgba(37, 99, 235, 0.16); }
+.tl-month-caret {
+  font-size: 11px;
+  color: var(--blue);
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.tl-month-toggle.collapsed .tl-month-caret { transform: rotate(-90deg); }
+.tl-item.is-tl-hidden { display: none; }
 /* 节点圆点 */
 .tl-dot {
   position: absolute;
