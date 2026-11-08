@@ -353,6 +353,20 @@ body::before {
   background: linear-gradient(180deg, var(--blue), rgba(37, 99, 235, 0.12));
 }
 .tl-item { position: relative; margin-bottom: 16px; }
+/* 时间线月份分隔标签 */
+.tl-month {
+  position: relative;
+  display: inline-block;
+  margin: 6px 0 18px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.10);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  color: var(--ink-1);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
 /* 节点圆点 */
 .tl-dot {
   position: absolute;
@@ -456,6 +470,44 @@ body::before {
 .ledger-table tbody tr:hover { background: rgba(37, 99, 235, 0.045); }
 .ledger-table tbody tr:last-child td { border-bottom: 0; }
 .ledger-table .col-amount, .ledger-table .amount-cell { text-align: right; }
+
+/* 月份分组标题行：点击可折叠该月记录 */
+.ledger-table .month-row td {
+  padding: 12px 20px;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.015));
+  border-bottom: 1px solid rgba(37, 99, 235, 0.14);
+}
+.ledger-table tbody tr.month-row:hover { background: transparent; }
+.month-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.month-caret {
+  font-size: 12px;
+  color: var(--blue);
+  transition: transform 0.2s ease;
+}
+.month-row.collapsed .month-caret { transform: rotate(-90deg); }
+.month-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-1);
+}
+.month-meta {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.ledger-table tr.is-month-hidden { display: none; }
 
 /* 类型徽章 */
 .type-badge {
@@ -771,6 +823,15 @@ body::before {
     flex-shrink: 0;
   }
   .ledger-table .amount-cell { font-size: 17px; }
+
+  /* 手机端月份分组标题 */
+  .ledger-table tr.month-row {
+    padding: 12px 16px;
+    background: rgba(37, 99, 235, 0.08);
+  }
+  .ledger-table .month-row td { display: block; padding: 0; text-align: left; }
+  .ledger-table .month-row td::before { content: none; }
+  .month-toggle { flex-wrap: wrap; gap: 4px 10px; }
 
   /* 联系按钮整行 */
   .contact-actions { flex-direction: column; }

@@ -246,16 +246,31 @@
 
   /* ========================== 区块 5：资金流水时间线渲染 ========================== */
 
+  /** 把 'YYYY-MM' 转成中文月份标题：2026-10 → 2026 年 10 月 */
+  function monthLabel(monthKey) {
+    const parts = String(monthKey).split('-');
+    return parts[0] + ' 年 ' + Number(parts[1]) + ' 月';
+  }
+
   function renderTimeline(recordsDesc) {
     const wrap = $('#timeline-list');
     if (!recordsDesc.length) {
       wrap.innerHTML = '<div class="tl-empty">暂无收支记录，等待第一笔公示。</div>';
       return;
     }
-    wrap.innerHTML = recordsDesc.map((r, i) => {
+    let lastMonth = '';   // 按月插入分组标题，避免一整条长流水
+    let idx = 0;
+    wrap.innerHTML = recordsDesc.map(r => {
+      const month = r.date.slice(0, 7);
+      let head = '';
+      if (month !== lastMonth) {
+        lastMonth = month;
+        head = '<div class="tl-month">' + monthLabel(month) + '</div>';
+      }
       const isIncome = r.type === 'income';
-      return (
-        '<div class="tl-item reveal" style="transition-delay:' + Math.min(i, 6) * 70 + 'ms">' +
+      idx += 1;
+      return head +
+        '<div class="tl-item reveal" style="transition-delay:' + Math.min(idx, 6) * 70 + 'ms">' +
           '<div class="tl-dot ' + (isIncome ? 'tl-dot--income' : 'tl-dot--expense') + '">' + (isIncome ? '+' : '−') + '</div>' +
           '<div class="tl-card">' +
             '<div>' +
@@ -271,8 +286,7 @@
               (isIncome ? '+' : '−') + '¥' + formatMoney(r.amount) +
             '</div>' +
           '</div>' +
-        '</div>'
-      );
+        '</div>';
     }).join('');
     observeReveals(wrap);
   }
@@ -292,21 +306,72 @@
 
     $('#empty-state').hidden = list.length > 0;
 
-    tbody.innerHTML = list.map(r => {
-      const isIncome = r.type === 'income';
-      return (
-        '<tr>' +
-          '<td data-label="日期" class="cell-date">' + r.date + '</td>' +
-          '<td data-label="类型"><span class="type-badge ' + (isIncome ? 'type-badge--income' : 'type-badge--expense') + '">' +
-            (isIncome ? '收入' : '支出') + '</span></td>' +
-          '<td data-label="项目"><span class="proj-badge">' + escapeHtml(r.project) + '</span></td>' +
-          '<td data-label="分类" class="cell-cat">' + escapeHtml(r.category) + '</td>' +
-          '<td data-label="摘要">' + escapeHtml(r.desc) + '</td>' +
-          '<td data-label="金额" class="amount-cell ' + (isIncome ? 'amount-cell--income' : 'amount-cell--expense') + '">' +
-            (isIncome ? '+' : '−') + '¥' + formatMoney(r.amount) + '</td>' +
-        '</tr>'
-      );
+    // 先按月分组：整张表太长，按月插标题行，点标题可折叠
+    const groups = [];
+    list.forEach(r => {
+      const month = r.date.slice(0, 7);
+      let g = groups[groups.length - 1];
+      if (!g || g.month !== month) {
+        g = { month: month, rows: [] };
+        groups.push(g);
+      }
+      g.rows.push(r);
+    });
+
+    tbody.innerHTML = groups.map(g => {
+      const income = g.rows.filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0);
+      const expense = g.rows.filter(r => r.type === 'expense').reduce((s, r) => s + r.amount, 0);
+      const meta = g.rows.length + ' 笔' +
+        (income ? ' · 收入 ¥' + formatMoney(income) : '') +
+        (expense ? ' · 支出 ¥' + formatMoney(expense) : '');
+
+      const headRow =
+        '<tr class="month-row">' +
+          '<td colspan="6">' +
+            '<button type="button" class="month-toggle" aria-expanded="true">' +
+              '<span class="month-caret">▾</span>' +
+              '<span class="month-title">' + monthLabel(g.month) + '</span>' +
+              '<span class="month-meta">' + meta + '</span>' +
+            '</button>' +
+          '</td>' +
+        '</tr>';
+
+      const bodyRows = g.rows.map(r => {
+        const isIncome = r.type === 'income';
+        return (
+          '<tr>' +
+            '<td data-label="日期" class="cell-date">' + r.date + '</td>' +
+            '<td data-label="类型"><span class="type-badge ' + (isIncome ? 'type-badge--income' : 'type-badge--expense') + '">' +
+              (isIncome ? '收入' : '支出') + '</span></td>' +
+            '<td data-label="项目"><span class="proj-badge">' + escapeHtml(r.project) + '</span></td>' +
+            '<td data-label="分类" class="cell-cat">' + escapeHtml(r.category) + '</td>' +
+            '<td data-label="摘要">' + escapeHtml(r.desc) + '</td>' +
+            '<td data-label="金额" class="amount-cell ' + (isIncome ? 'amount-cell--income' : 'amount-cell--expense') + '">' +
+              (isIncome ? '+' : '−') + '¥' + formatMoney(r.amount) + '</td>' +
+          '</tr>'
+        );
+      }).join('');
+
+      return headRow + bodyRows;
     }).join('');
+  }
+
+  /** 点击月份标题：折叠/展开该月所有记录 */
+  function bindMonthToggle() {
+    const tbody = $('#table-body');
+    if (!tbody) return;
+    tbody.addEventListener('click', e => {
+      const btn = e.target.closest('.month-toggle');
+      if (!btn) return;
+      const head = btn.closest('tr');
+      const collapsed = head.classList.toggle('collapsed');
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      let row = head.nextElementSibling;
+      while (row && !row.classList.contains('month-row')) {
+        row.classList.toggle('is-month-hidden', collapsed);
+        row = row.nextElementSibling;
+      }
+    });
   }
 
   function bindFilters() {
@@ -811,11 +876,12 @@
     renderProjectBar();
     bindFilters();
     bindProjectFilters();
+    bindMonthToggle();
     initCharts(summary, series);
 
     // 3) 对外暴露 API（控制台可输入 FundApp.summary() 查看，未来升级直接调用）
     window.FundApp = {
-      version: '1.1.0',
+      version: '1.2.0',
       data: FUND_DATA,
       getRecords: (desc) => sortRecords(records, desc === false),
       summary: () => calcSummary(records),
