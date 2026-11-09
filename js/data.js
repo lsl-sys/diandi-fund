@@ -899,7 +899,7 @@ const FUND_DATA = {
 
     {
       date: '2026-11-09',
-      project: '油漏检测',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '嘉立创 PCB 打板（打样）费用，经手人李斯理',
@@ -908,7 +908,7 @@ const FUND_DATA = {
     },
     {
       date: '2026-11-09',
-      project: '油漏检测',
+      project: '油液微水检测',
       type: 'expense',
       category: '元器件/物料',
       desc: '嘉立创 3D 打印（结构件/外壳）费用，经手人李斯理',
