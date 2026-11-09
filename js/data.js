@@ -180,8 +180,8 @@ const FUND_DATA = {
       project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
-      desc: '淘晶驰 T1 系列 4.3 寸串口电容屏 ×2，经手人李斯理',
-      amount: 120.00,
+      desc: '淘晶驰 T1 系列 4.3 寸串口电容屏 ×2，按发票计 ¥126.00（含运费 ¥6，原记 ¥120），经手人李斯理',
+      amount: 126.00,
       voucher: '',
     },
     {
