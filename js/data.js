@@ -874,8 +874,8 @@ const FUND_DATA = {
       project: '油漏检测',
       type: 'expense',
       category: '元器件/物料',
-      desc: 'ME6217C33M5G SOT-23-5 3.3V 稳压器 ×30（深圳市优信电子科技，10.31下单，已发货），经手人李斯理',
-      amount: 0.31,
+      desc: 'ME6217C33M5G SOT-23-5 3.3V 稳压器 ×30（单价 ¥0.31，合计 ¥9.30；深圳市优信电子科技，10.31下单，已发货），经手人李斯理',
+      amount: 9.30,
       voucher: '',
     },
     {
@@ -894,6 +894,25 @@ const FUND_DATA = {
       category: '设备/工具',
       desc: '正点原子 HP20 智能加热台数显（加热台主机+C2C 线，活动价优惠 ¥113）×1（正点原子旗舰店，10.20下单，交易成功，可开票），经手人李斯理',
       amount: 285.00,
+      voucher: '',
+    },
+
+    {
+      date: '2026-11-09',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '嘉立创 PCB 打板（打样）费用，经手人李斯理',
+      amount: 20.00,
+      voucher: '',
+    },
+    {
+      date: '2026-11-09',
+      project: '油漏检测',
+      type: 'expense',
+      category: '元器件/物料',
+      desc: '嘉立创 3D 打印（结构件/外壳）费用，经手人李斯理',
+      amount: 21.09,
       voucher: '',
     },
 
