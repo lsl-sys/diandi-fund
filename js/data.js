@@ -997,6 +997,15 @@ const FUND_DATA = {
       voucher: '',
     },
     {
+      date: '2026-11-22',
+      project: '油漏检测',
+      type: 'expense',
+      category: '其他',
+      desc: 'DeepSeek API 充值 ¥49.90（杭州深度求索，11.22 开票，技术服务费），经手人李斯理',
+      amount: 49.90,
+      voucher: '',
+    },
+    {
       date: '2026-11-17',
       project: '油漏检测',
       type: 'expense',
