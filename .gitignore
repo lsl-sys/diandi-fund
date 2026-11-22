@@ -3,3 +3,7 @@
 
 # 规格文档（开发过程文件，不上传）
 .trae/
+
+# 本地截图与分享包（临时产物，不上传）
+.screenshots/
+.trae-html-share-packages/

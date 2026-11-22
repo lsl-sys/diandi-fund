@@ -49,8 +49,8 @@ const FUND_DATA = {
     siteTitle: '点滴团队 · 资金公开公示',
 
     // ---- 联系方式（监督联系板块使用）----
-    email: 'm15397763602@163.com',      // 监督反馈邮箱（点击"发送监督邮件"会自动写信到这里）
-    qq: '3513992041',                   // 联系 QQ（网页上可一键复制）
+    email: 'contact@diandi-fund.online', // 监督反馈邮箱（点击"发送监督邮件"会自动写信到这里）
+    qq: '',                              // 联系 QQ（留空则网页自动隐藏 QQ 按钮）
     githubUser: 'lsl-sys',              // GitHub 用户名
     githubUrl: 'https://github.com/lsl-sys', // GitHub 主页链接
 

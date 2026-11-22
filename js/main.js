@@ -168,6 +168,7 @@
     const qq = site.qq || '';
     const githubUrl = site.githubUrl || ('https://github.com/' + (site.githubUser || ''));
     $('#qq-text').textContent = qq;
+    $('#qq-copy').style.display = qq ? '' : 'none';
     $('#email-text').innerHTML = '监督邮箱：<b>' + escapeHtml(email) + '</b>';
     $('#mailto-btn').href = 'mailto:' + email + '?subject=' + encodeURIComponent('点滴团队资金公示 · 监督反馈');
     $('#github-link').href = githubUrl;
